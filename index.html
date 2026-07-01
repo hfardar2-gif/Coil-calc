@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Galvanized Coil Calculator</title>
+
+<meta name="theme-color" content="#0f1f3d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Coil Calculator">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',Tahoma,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top left, rgba(61,124,255,0.22), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(0,212,170,0.12), transparent 24%),
+        linear-gradient(135deg, #081223 0%, #0d1b34 45%, #13284d 100%);
+    color:#ffffff;
+    padding:28px;
+}
+
+.page-shell{
+    width:100%;
+    max-width:1280px;
+    margin:0 auto;
+}
+
+.page-card{
+    display:grid;
+    grid-template-columns:minmax(0, 1.5fr) minmax(300px, 0.8fr);
+    gap:24px;
+    align-items:start;
+}
+
+.panel{
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.14);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 18px 50px rgba(0,0,0,0.28);
+    border-radius:28px;
+}
+
+.main-panel{
+    padding:32px;
+}
+
+.side-panel{
+    padding:28px;
+    position:sticky;
+    top:24px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:18px;
+    margin-bottom:28px;
+}
+
+.heading-wrap{
+    max-width:700px;
+}
+
+.eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.12);
+    font-size:12px;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+    color:#cfe0ff;
+    margin-bottom:14px;
+}
+
+h1{
+    font-size:34px;
+    line-height:1.15;
+    margin-bottom:10px;
+    font-weight:700;
+}
+
+.subtitle{
+    font-size:15px;
+    line-height:1.8;
+    color:rgba(255,255,255,0.82);
+    max-width:760px;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    border-radius:14px;
+    padding:13px 18px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.25s ease;
+}
+
+.btn-secondary{
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.14);
+}
+
+.btn-secondary:hover{
+    background:rgba(255,255,255,0.18);
+    transform:translateY(-1px);
+}
+
+.section-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+    margin-bottom:26px;
+}
+
+.form-group{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:20px;
+    padding:16px;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+    font-size:14px;
+    color:#f0f6ff;
+}
+
+.field-note{
+    margin-top:7px;
+    font-size:12px;
+    line-height:1.6;
+    color:rgba(255,255,255,0.68);
+}
+
+input{
+    width:100%;
+    padding:15px 16px;
+    border-radius:14px;
+    outline:none;
+    border:1px solid rgba(255,255,255,0.12);
+    background:rgba(8,18,35,0.30);
+    color:#ffffff;
+    font-size:16px;
+    transition:0.25s ease;
+}
+
+input::placeholder{
+    color:rgba(255,255,255,0.38);
+}
+
+input:focus{
+    border-color:rgba(90,174,255,0.9);
+    box-shadow:0 0 0 4px rgba(90,174,255,0.16);
+    background:rgba(8,18,35,0.44);
+}
+
+.result-box{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+}
+
+.result{
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:20px;
+    padding:18px;
+    transition:0.25s ease;
+}
+
+.result:hover{
+    background:rgba(255,255,255,0.16);
+    transform:translateY(-2px);
+}
+
+.result.primary{
+    grid-column:1 / -1;
+    background:linear-gradient(135deg, rgba(0, 212, 170, 0.18), rgba(88, 167, 255, 0.16));
+    border:1px solid rgba(96, 233, 199, 0.28);
+}
+
+.result-title{
+    font-size:13px;
+    letter-spacing:0.2px;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.70);
+}
+
+.result-value{
+    margin-top:10px;
+    font-size:29px;
+    font-weight:700;
+    word-break:break-word;
+    line-height:1.25;
+}
+
+.result-sub{
+    margin-top:8px;
+    font-size:12px;
+    line-height:1.6;
+    color:rgba(255,255,255,0.70);
+}
+
+.side-title{
+    font-size:22px;
+    margin-bottom:10px;
+    line-height:1.2;
+}
+
+.side-copy{
+    font-size:14px;
+    line-height:1.8;
+    color:rgba(255,255,255,0.78);
+    margin-bottom:18px;
+}
+
+.help-list{
+    list-style:none;
+    display:grid;
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.help-list li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:14px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.help-step{
+    min-width:28px;
+    height:28px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(91,157,255,0.24);
+    color:#dce9ff;
+    font-size:13px;
+    font-weight:700;
+}
+
+.help-text{
+    font-size:13px;
+    line-height:1.75;
+    color:rgba(255,255,255,0.82);
+}
+
+.help-card{
+    margin-top:16px;
+    padding:16px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.help-card h3{
+    font-size:14px;
+    margin-bottom:10px;
+    color:#ffffff;
+}
+
+.help-card p{
+    font-size:13px;
+    line-height:1.8;
+    color:rgba(255,255,255,0.78);
+}
+
+.mono{
+    font-family:Consolas, 'Courier New', monospace;
+    color:#e8f2ff;
+}
+
+.footer{
+    margin-top:24px;
+    text-align:center;
+    font-size:13px;
+    line-height:1.8;
+    color:rgba(255,255,255,0.62);
+}
+
+@media (max-width:1024px){
+    .page-card{
+        grid-template-columns:1fr;
+    }
+
+    .side-panel{
+        position:static;
+    }
+}
+
+@media (max-width:768px){
+
+    body{
+        padding:16px;
+    }
+
+    .main-panel,
+    .side-panel{
+        padding:22px;
+        border-radius:22px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    h1{
+        font-size:27px;
+    }
+
+    .subtitle{
+        font-size:14px;
+    }
+
+    .section-grid,
+    .result-box{
+        grid-template-columns:1fr;
+    }
+
+    .result-value{
+        font-size:24px;
+    }
+
+    button{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-shell">
+    <div class="page-card">
+
+        <main class="panel main-panel">
+
+            <div class="topbar">
+                <div class="heading-wrap">
+                    <div class="eyebrow">Sales Calculator</div>
+                    <h1>Galvanized Coil Calculator</h1>
+                    <div class="subtitle">
+                        Enter the daily USD rate, transfer fee, galvanized coil price, and sold tonnage
+                        to calculate gross USD, exchange fee, and final net USD after transfer costs.
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn-secondary" type="button" onclick="clearAllFields()">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-grid">
+                <div class="form-group">
+                    <label for="usdRate">USD Rate (Toman)</label>
+                    <input
+                        type="text"
+                        id="usdRate"
+                        placeholder="85,000"
+                        inputmode="numeric"
+                        oninput="formatNumber(this)">
+                    <div class="field-note">
+                        Daily market USD rate in Toman.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="exchangeFee">Exchange Fee (%)</label>
+                    <input
+                        type="text"
+                        id="exchangeFee"
+                        placeholder="2.5"
+                        inputmode="decimal"
+                        oninput="formatDecimal(this)">
+                    <div class="field-note">
+                        Percentage charged by exchange office to transfer the money outside Iran.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="coilPrice">Galvanized Coil Price (Toman / Kg)</label>
+                    <input
+                        type="text"
+                        id="coilPrice"
+                        placeholder="1,600,000"
+                        inputmode="numeric"
+                        oninput="formatNumber(this)">
+                    <div class="field-note">
+                        Daily selling price per kilogram.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tonnage">Tonnage Sold (Ton)</label>
+                    <input
+                        type="text"
+                        id="tonnage"
+                        placeholder="100"
+                        inputmode="numeric"
+                        oninput="formatNumber(this)">
+                    <div class="field-note">
+                        Total sold weight in tons.
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-box">
+
+                <div class="result primary">
+                    <div class="result-title">Net Value (USD After Fee)</div>
+                    <div class="result-value" id="usdResult">0 USD</div>
+                    <div class="result-sub">
+                        Final transferable dollar amount after deducting the exchange office fee.
+                    </div>
+                </div>
+
+                <div class="result">
+                    <div class="result-title">Gross Value (USD Before Fee)</div>
+                    <div class="result-value" id="grossUsdResult">0 USD</div>
+                </div>
+
+                <div class="result">
+                    <div class="result-title">Exchange Fee (USD)</div>
+                    <div class="result-value" id="feeUsdResult">0 USD</div>
+                </div>
+
+                <div class="result">
+                    <div class="result-title">Total Value (Toman)</div>
+                    <div class="result-value" id="tomanResult">0 Toman</div>
+                </div>
+
+                <div class="result">
+                    <div class="result-title">Total Value (Rial)</div>
+                    <div class="result-value" id="rialResult">0 Rial</div>
+                </div>
+
+                <div class="result">
+                    <div class="result-title">Net Price per Ton (USD/Ton)</div>
+                    <div class="result-value" id="usdTonResult">0 USD/Ton</div>
+                </div>
+
+                <div class="result">
+                    <div class="result-title">Gross Price per Ton (USD/Ton)</div>
+                    <div class="result-value" id="grossUsdTonResult">0 USD/Ton</div>
+                </div>
+
+            </div>
+
+            <div class="footer">
+                Executive For AKA Project By: Hamid Reza Fardar 
+            </div>
+
+        </main>
+
+        <aside class="panel side-panel">
+            <h2 class="side-title">How to Use</h2>
+            <div class="side-copy">
+                This calculator helps you estimate the real USD amount received from galvanized coil sales
+                after deducting the exchange transfer fee.
+            </div>
+
+            <ul class="help-list">
+                <li>
+                    <div class="help-step">1</div>
+                    <div class="help-text">
+                        Enter the current <strong>USD Rate</strong> in Toman.
+                    </div>
+                </li>
+                <li>
+                    <div class="help-step">2</div>
+                    <div class="help-text">
+                        Enter the <strong>Exchange Fee</strong> as a percentage, such as 2.5 or 3.75.
+                    </div>
+                </li>
+                <li>
+                    <div class="help-step">3</div>
+                    <div class="help-text">
+                        Enter the daily <strong>Galvanized Coil Price</strong> per kilogram in Toman.
+                    </div>
+                </li>
+                <li>
+                    <div class="help-step">4</div>
+                    <div class="help-text">
+                        Enter the sold <strong>Tonnage</strong> in tons. The calculator updates automatically.
+                    </div>
+                </li>
+            </ul>
+
+            <div class="help-card">
+                <h3>Formula</h3>
+                <p><span class="mono">Total Toman = Coil Price × Tonnage × 1000</span></p>
+                <p><span class="mono">Gross USD = Total Toman ÷ USD Rate</span></p>
+                <p><span class="mono">Fee USD = Gross USD × Fee %</span></p>
+                <p><span class="mono">Net USD = Gross USD − Fee USD</span></p>
+            </div>
+
+            <div class="help-card">
+                <h3>Example</h3>
+                <p>USD Rate: 85,000</p>
+                <p>Exchange Fee: 2.5%</p>
+                <p>Coil Price: 1,600,000 Toman / Kg</p>
+                <p>Tonnage Sold: 100 Ton</p>
+            </div>
+
+            <div class="help-card">
+                <h3>Notes</h3>
+                <p>Use comma-separated values for large numbers, such as 1,600,000.</p>
+                <p>For the fee field, decimal values are supported, for example 2.5.</p>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+<script>
+function numberValue(id){
+    return parseFloat(
+        document.getElementById(id)
+            .value
+            .replace(/,/g,'')
+    ) || 0;
+}
+
+function formatNumber(input){
+    let value = input.value.replace(/,/g,'');
+
+    if(value === ''){
+        input.value = '';
+        calculate();
+        return;
+    }
+
+    value = value.replace(/[^\d]/g,'');
+
+    if(value !== ''){
+        input.value = Number(value).toLocaleString('en-US');
+    }else{
+        input.value = '';
+    }
+
+    calculate();
+}
+
+function formatDecimal(input){
+    let value = input.value;
+    value = value.replace(/[^0-9.]/g,'');
+
+    let parts = value.split('.');
+    if(parts.length > 2){
+        value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    input.value = value;
+    calculate();
+}
+
+function calculate(){
+    let usdRate = numberValue('usdRate');
+    let exchangeFee = numberValue('exchangeFee');
+    let coilPrice = numberValue('coilPrice');
+    let tonnage = numberValue('tonnage');
+
+    let totalToman =
+        coilPrice *
+        tonnage *
+        1000;
+
+    let totalRial =
+        totalToman * 10;
+
+    let grossUSD =
+        usdRate > 0
+        ? totalToman / usdRate
+        : 0;
+
+    let feeUSD =
+        grossUSD * (exchangeFee / 100);
+
+    let netUSD =
+        grossUSD - feeUSD;
+
+    let grossUsdPerTon =
+        tonnage > 0
+        ? grossUSD / tonnage
+        : 0;
+
+    let netUsdPerTon =
+        tonnage > 0
+        ? netUSD / tonnage
+        : 0;
+
+    document.getElementById('tomanResult').innerHTML =
+        totalToman.toLocaleString('en-US',{
+            maximumFractionDigits:0
+        }) + ' Toman';
+
+    document.getElementById('rialResult').innerHTML =
+        totalRial.toLocaleString('en-US',{
+            maximumFractionDigits:0
+        }) + ' Rial';
+
+    document.getElementById('grossUsdResult').innerHTML =
+        grossUSD.toLocaleString('en-US',{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }) + ' USD';
+
+    document.getElementById('feeUsdResult').innerHTML =
+        feeUSD.toLocaleString('en-US',{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }) + ' USD';
+
+    document.getElementById('usdResult').innerHTML =
+        netUSD.toLocaleString('en-US',{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }) + ' USD';
+
+    document.getElementById('grossUsdTonResult').innerHTML =
+        grossUsdPerTon.toLocaleString('en-US',{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }) + ' USD/Ton';
+
+    document.getElementById('usdTonResult').innerHTML =
+        netUsdPerTon.toLocaleString('en-US',{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }) + ' USD/Ton';
+}
+
+function clearAllFields(){
+    document.getElementById('usdRate').value = '';
+    document.getElementById('exchangeFee').value = '';
+    document.getElementById('coilPrice').value = '';
+    document.getElementById('tonnage').value = '';
+    calculate();
+}
+
+calculate();
+</script>
+
+</body>
+</html>
