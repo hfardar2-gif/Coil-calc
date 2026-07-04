@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -597,9 +598,23 @@ input:focus{
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;flex-wrap:wrap;">
-            <div id="ratesLastUpdate" style="font-size:13px;opacity:.8;">
-                Last Update: --
-            </div>
+            
+<div id="ratesLastUpdate"
+     style="
+        font-size:16px;
+        font-weight:600;
+        color:#dbe7ff;
+        padding:10px 14px;
+        background:rgba(255,255,255,.08);
+        border-radius:12px;
+        line-height:1.8;
+        display:inline-block;
+        backdrop-filter:blur(10px);
+     ">
+    <div id="sourceTime">Source Update: --</div>
+    <div id="checkedTime">Current System Time: --</div>
+</div>
+
 
             <button id="refreshRatesBtn"
                 style="padding:8px 14px;border:none;border-radius:10px;cursor:pointer;background:#6c7ae0;color:#fff;">
@@ -670,7 +685,7 @@ function navasanret(data){
         if (usdRow) {
             const t = usdRow.querySelector('.dat');
             if (t) {
-                updateRateTimestamp();
+                updateRateTimestamp(t.textContent.trim());
             }
         }
     }, 100);
@@ -681,7 +696,7 @@ function navasanret(data){
 
 <div class="footer">
 <div class="footer">
-                Executive For AKA Project By: Hamid Reza Fardar 
+                Exchange rates are taken from official Iranian websites 
             </div>
 
         </main>
@@ -720,21 +735,7 @@ function navasanret(data){
                 </li>
             </ul>
 
-            <div class="help-card">
-
-                <p><span class="mono">Total Toman = Coil Price × Tonnage × 1000</span></p>
-                <p><span class="mono">Gross USD = Total Toman ÷ USD Rate</span></p>
-                <p><span class="mono">Fee USD = Gross USD × Fee %</span></p>
-                <p><span class="mono">Net USD = Gross USD − Fee USD</span></p>
-            </div>
-
-            <div class="help-card">
-
-                <p>USD Rate: 85,000</p>
-                <p>Exchange Fee: 2.5%</p>
-                <p>Coil Price: 1,600,000 Toman / Kg</p>
-                <p>Tonnage Sold: 100 Ton</p>
-            </div>
+            
 
             
 
@@ -883,35 +884,43 @@ function toEnglishDigits(str){
   return String(str).replace(/[۰-۹]/g,d=>fa.indexOf(d));
 }
 
-function updateRateTimestamp(){
+
+function updateRateTimestamp(sourceTime){
     const now = new Date();
 
-    const date = now.toLocaleDateString('en-US',{
+    const currentDate = now.toLocaleDateString('en-US',{
         month:'short',
         day:'2-digit',
         year:'numeric'
     });
 
-    const time = now.toLocaleTimeString('en-US',{
+    const currentTime = now.toLocaleTimeString('en-US',{
         hour:'2-digit',
         minute:'2-digit',
         hour12:false
     });
 
-    const el = document.getElementById('ratesLastUpdate');
+    const src = document.getElementById('sourceTime');
+    const chk = document.getElementById('checkedTime');
 
-    if(el){
-        el.textContent =
-            `Last Checked: ${date} | ${time}`;
+    if(src){
+        src.textContent =
+            `Source Update: ${currentDate} | ${toEnglishDigits(sourceTime || '--:--')}`;
+    }
+
+    if(chk){
+        chk.textContent =
+            `Current System Time: ${currentDate} | ${currentTime}`;
     }
 }
+
 
 </script>
 
 
 <div class="executive-signature">
     <div class="exec-title">
-        🏆 Executive Dashboard for AKA Project
+        🏆 Executive for AKA Project
     </div>
 
     <div class="exec-name">
