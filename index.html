@@ -13,6 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="Coil Calculator">
 
 <style>
+/* ===== همه استایل‌های قبلی دقیقاً مثل قبل ===== */
 *{
     margin:0;
     padding:0;
@@ -314,6 +315,44 @@ input:focus{
     color:rgba(255,255,255,0.62);
 }
 
+/* ===== بخش نمایش قیمت دلار ===== */
+.dollar-price-box {
+    grid-column: 1 / -1;
+    margin-top: 24px;
+    padding: 20px 28px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.dollar-price-box .label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #f0f6ff;
+}
+
+.dollar-price-box .price {
+    font-size: 32px;
+    font-weight: 700;
+    color: #60e9c7;
+    background: rgba(0,212,170,0.10);
+    padding: 8px 24px;
+    border-radius: 60px;
+    border: 1px solid rgba(96,233,199,0.25);
+    min-width: 140px;
+    text-align: center;
+}
+
+.dollar-price-box .status {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+}
+
 @media (max-width:1024px){
     .page-card{
         grid-template-columns:1fr;
@@ -361,7 +400,70 @@ input:focus{
     button{
         width:100%;
     }
+
+    .dollar-price-box {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    .dollar-price-box .price {
+        font-size: 26px;
+        padding: 6px 12px;
+    }
 }
+
+.result-value{
+    direction:ltr !important;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* ===== Executive Signature ===== */
+.executive-signature{
+    margin-top:35px;
+    padding:24px 35px;
+    border-radius:22px;
+    background:linear-gradient(135deg,rgba(108,122,224,.30),rgba(72,187,255,.15));
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 10px 35px rgba(0,0,0,.30),0 0 30px rgba(108,122,224,.25);
+    text-align:center;
+    overflow:hidden;
+}
+.executive-signature::before{
+    content:'';
+    display:block;
+    width:100%;
+    height:2px;
+    background:linear-gradient(90deg,transparent,#fbc157,transparent);
+    margin-bottom:15px;
+}
+.exec-title{
+    font-size:22px;
+    font-weight:800;
+    color:#fff;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+.exec-name{
+    font-size:20px;
+    font-weight:700;
+    color:#fbc157;
+    margin-bottom:10px;
+}
+.exec-role{
+    font-size:15px;
+    color:#dce5ff;
+}
+@media (max-width:768px){
+    .exec-title{font-size:17px;line-height:1.5;}
+    .exec-name{font-size:17px;}
+    .exec-role{font-size:13px;line-height:1.6;}
+}
+
 </style>
 </head>
 
@@ -485,8 +587,100 @@ input:focus{
 
             </div>
 
-            <div class="footer">
-                Executive For AKA Project By: Hamid Reza Fardar 
+            
+<!-- ===== Live Exchange Rates ===== -->
+<div class="dollar-price-box">
+    <div style="width:100%">
+        <div style="font-size:18px;font-weight:600;margin-bottom:18px;color:#f0f6ff;">
+            💵 Live Exchange Rates
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;flex-wrap:wrap;">
+            <div id="ratesLastUpdate" style="font-size:13px;opacity:.8;">
+                Last Update: --
+            </div>
+
+            <button id="refreshRatesBtn"
+                style="padding:8px 14px;border:none;border-radius:10px;cursor:pointer;background:#6c7ae0;color:#fff;">
+                🔄 Refresh Rates
+            </button>
+        </div>
+
+        <div class="result-box" style="margin-top:0;">
+            <div class="result">
+                <div class="result-title">US Dollar</div>
+                <div class="result-value" id="cardUsd">Loading...</div>
+            </div>
+
+            <div class="result">
+                <div class="result-title">USD Wire Transfer</div>
+                <div class="result-value" id="cardUsdShakhs">Loading...</div>
+            </div>
+
+            <div class="result">
+                <div class="result-title">Euro</div>
+                <div class="result-value" id="cardEur">Loading...</div>
+            </div>
+
+            <div class="result">
+                <div class="result-title">Chinese Yuan</div>
+                <div class="result-value" id="cardCny">Loading...</div>
+            </div>
+        </div>
+
+        <div id="navasan_table_container" style="display:none"></div>
+    </div>
+</div>
+
+<script>
+
+function toEnglishDigits(str){
+    return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+}
+
+function getRate(rowId){
+    const row = document.getElementById(rowId);
+    if(!row) return '--';
+
+    const cell = row.querySelector('.val');
+    if(!cell) return '--';
+
+    return toEnglishDigits(cell.textContent.trim());
+}
+
+function navasanret(data){
+    document.getElementById('navasan_table_container').innerHTML =
+        JSON.parse(data);
+
+    setTimeout(() => {
+        document.getElementById('cardUsd').textContent =
+            getRate('usd') + ' Toman';
+
+        document.getElementById('cardUsdShakhs').textContent =
+            getRate('usd_shakhs') + ' Toman';
+
+        document.getElementById('cardEur').textContent =
+            getRate('eur') + ' Toman';
+
+        document.getElementById('cardCny').textContent =
+            getRate('cny') + ' Toman';
+
+        const usdRow = document.getElementById('usd');
+        if (usdRow) {
+            const t = usdRow.querySelector('.dat');
+            if (t) {
+                updateRateTimestamp(t.textContent.trim());
+            }
+        }
+    }, 100);
+}
+</script>
+
+<script src="https://www.navasan.tech/wp-navasan.php?usd&usd_shakhs&eur&cny"></script>
+
+<div class="footer">
+<div class="footer">
+               The exchange rates have been acquired from official Iranian websites. 
             </div>
 
         </main>
@@ -525,160 +719,167 @@ input:focus{
                 </li>
             </ul>
 
-            <div class="help-card">
-                <h3>Formula</h3>
-                <p><span class="mono">Total Toman = Coil Price × Tonnage × 1000</span></p>
-                <p><span class="mono">Gross USD = Total Toman ÷ USD Rate</span></p>
-                <p><span class="mono">Fee USD = Gross USD × Fee %</span></p>
-                <p><span class="mono">Net USD = Gross USD − Fee USD</span></p>
-            </div>
+            
 
-            <div class="help-card">
-                <h3>Example</h3>
-                <p>USD Rate: 85,000</p>
-                <p>Exchange Fee: 2.5%</p>
-                <p>Coil Price: 1,600,000 Toman / Kg</p>
-                <p>Tonnage Sold: 100 Ton</p>
-            </div>
-
-            <div class="help-card">
-                <h3>Notes</h3>
-                <p>Use comma-separated values for large numbers, such as 1,600,000.</p>
-                <p>For the fee field, decimal values are supported, for example 2.5.</p>
-            </div>
-        </aside>
-
-    </div>
-</div>
+            
 
 <script>
-function numberValue(id){
-    return parseFloat(
-        document.getElementById(id)
-            .value
-            .replace(/,/g,'')
-    ) || 0;
+// ============================================================
+//  توابع کمکی با محافظت در برابر null
+// ============================================================
+function safeGetElement(id) {
+    const el = document.getElementById(id);
+    if (!el) console.warn('⚠️ عنصر با ID "' + id + '" پیدا نشد');
+    return el;
 }
 
-function formatNumber(input){
-    let value = input.value.replace(/,/g,'');
+function numberValue(id) {
+    const el = safeGetElement(id);
+    if (!el) return 0;
+    return parseFloat(el.value.replace(/,/g, '')) || 0;
+}
 
-    if(value === ''){
-        input.value = '';
-        calculate();
-        return;
-    }
-
-    value = value.replace(/[^\d]/g,'');
-
-    if(value !== ''){
-        input.value = Number(value).toLocaleString('en-US');
-    }else{
-        input.value = '';
-    }
-
+function formatNumber(input) {
+    if (!input) return;
+    let value = input.value.replace(/,/g, '');
+    if (value === '') { input.value = ''; calculate(); return; }
+    value = value.replace(/[^\d]/g, '');
+    input.value = value ? Number(value).toLocaleString('en-US') : '';
     calculate();
 }
 
-function formatDecimal(input){
-    let value = input.value;
-    value = value.replace(/[^0-9.]/g,'');
-
+function formatDecimal(input) {
+    if (!input) return;
+    let value = input.value.replace(/[^0-9.]/g, '');
     let parts = value.split('.');
-    if(parts.length > 2){
-        value = parts[0] + '.' + parts.slice(1).join('');
-    }
-
+    if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
     input.value = value;
     calculate();
 }
 
-function calculate(){
-    let usdRate = numberValue('usdRate');
-    let exchangeFee = numberValue('exchangeFee');
-    let coilPrice = numberValue('coilPrice');
-    let tonnage = numberValue('tonnage');
+// ============================================================
+//  تابع محاسبه اصلی (ضد خطا)
+// ============================================================
+function calculate() {
+    try {
+        const usdRate = numberValue('usdRate');
+        const exchangeFee = numberValue('exchangeFee');
+        const coilPrice = numberValue('coilPrice');
+        const tonnage = numberValue('tonnage');
 
-    let totalToman =
-        coilPrice *
-        tonnage *
-        1000;
+        const totalToman = coilPrice * tonnage * 1000;
+        const totalRial = totalToman * 10;
+        const grossUSD = usdRate > 0 ? totalToman / usdRate : 0;
+        const feeUSD = grossUSD * (exchangeFee / 100);
+        const netUSD = grossUSD - feeUSD;
+        const grossUsdPerTon = tonnage > 0 ? grossUSD / tonnage : 0;
+        const netUsdPerTon = tonnage > 0 ? netUSD / tonnage : 0;
 
-    let totalRial =
-        totalToman * 10;
+        const setText = (id, text) => {
+            const el = safeGetElement(id);
+            if (el) el.innerHTML = text;
+        };
 
-    let grossUSD =
-        usdRate > 0
-        ? totalToman / usdRate
-        : 0;
+        setText('tomanResult', totalToman.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' Toman');
+        setText('rialResult', totalRial.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' Rial');
+        setText('grossUsdResult', grossUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD');
+        setText('feeUsdResult', feeUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD');
+        setText('usdResult', netUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD');
+        setText('grossUsdTonResult', grossUsdPerTon.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD/Ton');
+        setText('usdTonResult', netUsdPerTon.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD/Ton');
 
-    let feeUSD =
-        grossUSD * (exchangeFee / 100);
-
-    let netUSD =
-        grossUSD - feeUSD;
-
-    let grossUsdPerTon =
-        tonnage > 0
-        ? grossUSD / tonnage
-        : 0;
-
-    let netUsdPerTon =
-        tonnage > 0
-        ? netUSD / tonnage
-        : 0;
-
-    document.getElementById('tomanResult').innerHTML =
-        totalToman.toLocaleString('en-US',{
-            maximumFractionDigits:0
-        }) + ' Toman';
-
-    document.getElementById('rialResult').innerHTML =
-        totalRial.toLocaleString('en-US',{
-            maximumFractionDigits:0
-        }) + ' Rial';
-
-    document.getElementById('grossUsdResult').innerHTML =
-        grossUSD.toLocaleString('en-US',{
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }) + ' USD';
-
-    document.getElementById('feeUsdResult').innerHTML =
-        feeUSD.toLocaleString('en-US',{
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }) + ' USD';
-
-    document.getElementById('usdResult').innerHTML =
-        netUSD.toLocaleString('en-US',{
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }) + ' USD';
-
-    document.getElementById('grossUsdTonResult').innerHTML =
-        grossUsdPerTon.toLocaleString('en-US',{
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }) + ' USD/Ton';
-
-    document.getElementById('usdTonResult').innerHTML =
-        netUsdPerTon.toLocaleString('en-US',{
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }) + ' USD/Ton';
+    } catch (error) {
+        console.error('❌ خطا در محاسبه:', error);
+        const footer = document.querySelector('.footer');
+        if (footer) footer.innerHTML += ' | ⚠️ خطا در محاسبه';
+    }
 }
 
-function clearAllFields(){
-    document.getElementById('usdRate').value = '';
-    document.getElementById('exchangeFee').value = '';
-    document.getElementById('coilPrice').value = '';
-    document.getElementById('tonnage').value = '';
+function clearAllFields() {
+    ['usdRate', 'exchangeFee', 'coilPrice', 'tonnage'].forEach(id => {
+        const el = safeGetElement(id);
+        if (el) el.value = '';
+    });
     calculate();
 }
 
-calculate();
+// ============================================================
+
+
+// ============================================================
+//  اجرای اولیه با تاخیر
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        calculate();
+    }, 200);
+});
+
+// ============================================================
+//  محافظت در برابر خطاهای全局
+// ============================================================
+window.onerror = function(msg, url, line, col, error) {
+    console.error('❌ خطای全局:', msg, error);
+    const footer = document.querySelector('.footer');
+    if (footer) footer.innerHTML += ' | ⚠️ خطا: ' + msg;
+    return true;
+};
 </script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const btn = document.getElementById('refreshRatesBtn');
+    if(btn){
+        btn.addEventListener('click', function(){
+            const old = document.querySelector('script[data-navasan]');
+            if(old) old.remove();
+
+            const s = document.createElement('script');
+            s.src = 'https://www.navasan.tech/wp-navasan.php?usd&usd_shakhs&eur&cny&_=' + Date.now();
+            s.setAttribute('data-navasan','1');
+            document.body.appendChild(s);
+        });
+    }
+});
+</script>
+
+
+<script>
+function toEnglishDigits(str){
+  const fa='۰۱۲۳۴۵۶۷۸۹';
+  return String(str).replace(/[۰-۹]/g,d=>fa.indexOf(d));
+}
+
+function updateRateTimestamp(persianTime){
+  const now = new Date();
+  const date = now.toLocaleDateString('en-CA',{
+      year:'numeric',
+      month:'2-digit',
+      day:'2-digit'
+  });
+  const time = toEnglishDigits(persianTime || '--:--');
+  const el = document.getElementById('ratesLastUpdate');
+  if(el){
+      el.textContent = `Last Update: ${date} ${time}`;
+  }
+}
+</script>
+
+
+<div class="executive-signature">
+    <div class="exec-title">
+        🏆 Executive Dashboard for AKA Project
+    </div>
+
+    <div class="exec-name">
+       Developed by Engineer Hamid Reza Fardar
+    </div>
+
+    <div class="exec-role">
+        Digital Transformation & Business Strategy Consultant
+    </div>
+</div>
 
 </body>
 </html>
