@@ -676,11 +676,11 @@ function navasanret(data){
 }
 </script>
 
-<script src="https://www.navasan.tech/wp-navasan.php?usd&usd_shakhs&eur&cny"></script>
+<script id="navasanScript" src="https://www.navasan.tech/wp-navasan.php?usd&usd_shakhs&eur&cny"></script>
 
 <div class="footer">
 <div class="footer">
-               The exchange rates have been acquired from official Iranian websites. 
+                Executive For AKA Project By: Hamid Reza Fardar 
             </div>
 
         </main>
@@ -719,7 +719,21 @@ function navasanret(data){
                 </li>
             </ul>
 
-            
+            <div class="help-card">
+
+                <p><span class="mono">Total Toman = Coil Price × Tonnage × 1000</span></p>
+                <p><span class="mono">Gross USD = Total Toman ÷ USD Rate</span></p>
+                <p><span class="mono">Fee USD = Gross USD × Fee %</span></p>
+                <p><span class="mono">Net USD = Gross USD − Fee USD</span></p>
+            </div>
+
+            <div class="help-card">
+
+                <p>USD Rate: 85,000</p>
+                <p>Exchange Fee: 2.5%</p>
+                <p>Coil Price: 1,600,000 Toman / Kg</p>
+                <p>Tonnage Sold: 100 Ton</p>
+            </div>
 
             
 
@@ -827,22 +841,39 @@ window.onerror = function(msg, url, line, col, error) {
 </script>
 
 
+
 <script>
+function loadRates(){
+    document.getElementById('navasan_table_container').innerHTML = '';
+
+    const old = document.getElementById('navasanScript');
+    if(old) old.remove();
+
+    const s = document.createElement('script');
+    s.id = 'navasanScript';
+    s.src = 'https://www.navasan.tech/wp-navasan.php?usd&usd_shakhs&eur&cny&t=' + Date.now();
+    document.body.appendChild(s);
+}
+
 document.addEventListener('DOMContentLoaded', function(){
     const btn = document.getElementById('refreshRatesBtn');
+
     if(btn){
         btn.addEventListener('click', function(){
-            const old = document.querySelector('script[data-navasan]');
-            if(old) old.remove();
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Updating...';
 
-            const s = document.createElement('script');
-            s.src = 'https://www.navasan.tech/wp-navasan.php?usd&usd_shakhs&eur&cny&_=' + Date.now();
-            s.setAttribute('data-navasan','1');
-            document.body.appendChild(s);
+            loadRates();
+
+            setTimeout(()=>{
+                btn.disabled = false;
+                btn.innerHTML = '🔄 Refresh Rates';
+            },1500);
         });
     }
 });
 </script>
+
 
 
 <script>
@@ -873,7 +904,7 @@ function updateRateTimestamp(persianTime){
     </div>
 
     <div class="exec-name">
-       Developed by Engineer Hamid Reza Fardar
+        Prepared by Dr. Hamid Reza Fardar
     </div>
 
     <div class="exec-role">
