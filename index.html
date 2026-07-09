@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +5,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-<title>Galvanized Coil Calculator</title>
+<title>Exchange Rate Dashboard & Coil Pricing Tool</title>
 
 <meta name="theme-color" content="#0f1f3d">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,7 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="Coil Calculator">
 
 <style>
-/* ===== همه استایل‌های قبلی دقیقاً مثل قبل ===== */
+/* ===== همه استایل‌های قبلی ===== */
 *{
     margin:0;
     padding:0;
@@ -102,8 +100,36 @@ h1{
 .subtitle{
     font-size:15px;
     line-height:1.8;
-    color:rgba(255,255,255,0.82);
+    color:rgba(251, 193, 87, 0.9);
     max-width:760px;
+    position:relative;
+    padding-bottom:12px;
+    margin-bottom:4px;
+    text-shadow:0 0 20px rgba(251,193,87,0.05);
+    transition: all 0.3s ease;
+}
+
+.subtitle::after{
+    content:'';
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    max-width:400px;
+    height:2px;
+    background:linear-gradient(90deg, #fbc157, #d4a03a, transparent);
+    border-radius:2px;
+    opacity:0.6;
+    transition: opacity 0.3s ease, max-width 0.5s ease;
+}
+
+.subtitle:hover{
+    text-shadow:0 0 30px rgba(251,193,87,0.15);
+}
+
+.subtitle:hover::after{
+    opacity:1;
+    max-width:100%;
 }
 
 .actions{
@@ -133,203 +159,30 @@ button{
     transform:translateY(-1px);
 }
 
-.section-grid{
-    display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:16px;
-    margin-bottom:26px;
-}
-
-.form-group{
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.10);
-    border-radius:20px;
-    padding:16px;
-}
-
-.form-group.full{
-    grid-column:1 / -1;
-}
-
-label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:600;
-    font-size:14px;
-    color:#f0f6ff;
-}
-
-.field-note{
-    margin-top:7px;
-    font-size:12px;
-    line-height:1.6;
-    color:rgba(255,255,255,0.68);
-}
-
-input{
-    width:100%;
-    padding:15px 16px;
-    border-radius:14px;
-    outline:none;
-    border:1px solid rgba(255,255,255,0.12);
-    background:rgba(8,18,35,0.30);
-    color:#ffffff;
-    font-size:16px;
-    transition:0.25s ease;
-}
-
-input::placeholder{
-    color:rgba(255,255,255,0.38);
-}
-
-input:focus{
-    border-color:rgba(90,174,255,0.9);
-    box-shadow:0 0 0 4px rgba(90,174,255,0.16);
-    background:rgba(8,18,35,0.44);
-}
-
-.result-box{
-    display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:16px;
-}
-
-.result{
-    background:rgba(255,255,255,0.10);
-    border:1px solid rgba(255,255,255,0.10);
-    border-radius:20px;
-    padding:18px;
-    transition:0.25s ease;
-}
-
-.result:hover{
-    background:rgba(255,255,255,0.16);
-    transform:translateY(-2px);
-}
-
-.result.primary{
-    grid-column:1 / -1;
-    background:linear-gradient(135deg, rgba(0, 212, 170, 0.18), rgba(88, 167, 255, 0.16));
-    border:1px solid rgba(96, 233, 199, 0.28);
-}
-
-.result-title{
-    font-size:13px;
-    letter-spacing:0.2px;
-    text-transform:uppercase;
-    color:rgba(255,255,255,0.70);
-}
-
-.result-value{
-    margin-top:10px;
-    font-size:29px;
-    font-weight:700;
-    word-break:break-word;
-    line-height:1.25;
-}
-
-.result-sub{
-    margin-top:8px;
-    font-size:12px;
-    line-height:1.6;
-    color:rgba(255,255,255,0.70);
-}
-
-.side-title{
-    font-size:22px;
-    margin-bottom:10px;
-    line-height:1.2;
-}
-
-.side-copy{
-    font-size:14px;
-    line-height:1.8;
-    color:rgba(255,255,255,0.78);
-    margin-bottom:18px;
-}
-
-.help-list{
-    list-style:none;
-    display:grid;
-    gap:14px;
-    margin-bottom:18px;
-}
-
-.help-list li{
-    display:flex;
-    gap:12px;
-    align-items:flex-start;
-    padding:14px;
-    border-radius:18px;
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.08);
-}
-
-.help-step{
-    min-width:28px;
-    height:28px;
-    border-radius:999px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(91,157,255,0.24);
-    color:#dce9ff;
-    font-size:13px;
-    font-weight:700;
-}
-
-.help-text{
-    font-size:13px;
-    line-height:1.75;
-    color:rgba(255,255,255,0.82);
-}
-
-.help-card{
-    margin-top:16px;
-    padding:16px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.08);
-}
-
-.help-card h3{
-    font-size:14px;
-    margin-bottom:10px;
-    color:#ffffff;
-}
-
-.help-card p{
-    font-size:13px;
-    line-height:1.8;
-    color:rgba(255,255,255,0.78);
-}
-
-.mono{
-    font-family:Consolas, 'Courier New', monospace;
-    color:#e8f2ff;
-}
-
-.footer{
-    margin-top:24px;
-    text-align:center;
-    font-size:13px;
-    line-height:1.8;
-    color:rgba(255,255,255,0.62);
-}
-
-/* ===== بخش نمایش قیمت دلار ===== */
+/* ===== بخش Live Exchange Rates ===== */
 .dollar-price-box {
     grid-column: 1 / -1;
     margin-top: 24px;
-    padding: 20px 28px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 24px;
+    padding: 28px 32px;
+    background: linear-gradient(145deg, rgba(15, 25, 55, 0.88), rgba(8, 15, 35, 0.85));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1.5px solid rgba(251, 193, 87, 0.3);
+    border-radius: 28px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(251, 193, 87, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.dollar-price-box:hover {
+    border-color: rgba(251, 193, 87, 0.6);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(251, 193, 87, 0.1);
+    transform: translateY(-3px);
 }
 
 .dollar-price-box .label {
@@ -341,11 +194,11 @@ input:focus{
 .dollar-price-box .price {
     font-size: 32px;
     font-weight: 700;
-    color: #60e9c7;
-    background: rgba(0,212,170,0.10);
+    color: #fbc157;
+    background: rgba(251, 193, 87, 0.1);
     padding: 8px 24px;
     border-radius: 60px;
-    border: 1px solid rgba(96,233,199,0.25);
+    border: 1px solid rgba(251, 193, 87, 0.25);
     min-width: 140px;
     text-align: center;
 }
@@ -355,71 +208,413 @@ input:focus{
     color: rgba(255,255,255,0.55);
 }
 
-@media (max-width:1024px){
-    .page-card{
-        grid-template-columns:1fr;
-    }
-
-    .side-panel{
-        position:static;
-    }
+.dollar-price-box .result-box .result {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(251, 193, 87, 0.15);
+    border-radius: 20px;
+    padding: 22px 20px;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-@media (max-width:768px){
-
-    body{
-        padding:16px;
-    }
-
-    .main-panel,
-    .side-panel{
-        padding:22px;
-        border-radius:22px;
-    }
-
-    .topbar{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    h1{
-        font-size:27px;
-    }
-
-    .subtitle{
-        font-size:14px;
-    }
-
-    .section-grid,
-    .result-box{
-        grid-template-columns:1fr;
-    }
-
-    .result-value{
-        font-size:24px;
-    }
-
-    button{
-        width:100%;
-    }
-
-    .dollar-price-box {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
-    }
-    .dollar-price-box .price {
-        font-size: 26px;
-        padding: 6px 12px;
-    }
+.dollar-price-box .result-box .result::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 20%, rgba(251, 193, 87, 0.05), transparent 60%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
 }
 
-.result-value{
-    direction:ltr !important;
-    font-family: 'Segoe UI', Arial, sans-serif !important;
-    font-variant-numeric: tabular-nums;
+.dollar-price-box .result-box .result:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(251, 193, 87, 0.4);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
+.dollar-price-box .result-box .result:hover::after {
+    opacity: 1;
+}
+
+.dollar-price-box .result-box .result .result-value {
+    color: #fbc157;
+    text-shadow: 0 0 20px rgba(251, 193, 87, 0.1);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.dollar-price-box .result-box .result .result-title {
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* ============================================================
+   بخش Galvanized Coil Calculator
+   ============================================================ */
+
+.calculator-section {
+    margin-top: 24px;
+    padding: 24px;
+    background: linear-gradient(145deg, #0a1228, #070d1f);
+    border-radius: 28px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(251, 193, 87, 0.08);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.calculator-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 10%, rgba(251, 193, 87, 0.06), transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(251, 193, 87, 0.04), transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(251, 193, 87, 0.05), transparent 45%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.calculator-section > * {
+    position: relative;
+    z-index: 1;
+}
+
+.calculator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.section-title-coil {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fbc157;
+    text-shadow: 0 0 30px rgba(251, 193, 87, 0.15);
+    letter-spacing: 0.5px;
+}
+
+.btn-toggle-calc {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(251, 193, 87, 0.2);
+    border-radius: 14px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fbc157;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-toggle-calc:hover {
+    background: rgba(251, 193, 87, 0.15);
+    transform: scale(1.02);
+}
+
+.calc-content {
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.calc-content.hidden {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.calc-content.visible {
+    max-height: 5000px;
+    opacity: 1;
+}
+
+.form-group-calc {
+    background: #0d162a;
+    border-radius: 20px;
+    padding: 18px 20px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-group-calc::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #fbc157, #d4a03a, #fbc157, transparent);
+    border-radius: 20px 20px 0 0;
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+}
+
+.form-group-calc::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba(251, 193, 87, 0.08), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+.form-group-calc:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(251, 193, 87, 0.08);
+}
+
+.form-group-calc:hover::before {
+    opacity: 1;
+}
+
+.form-group-calc:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.2);
+}
+
+.form-group-calc label {
+    color: #e8eef5;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.input-with-select {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.input-with-select select {
+    padding: 12px 14px;
+    border-radius: 14px;
+    outline: none;
+    border: 1px solid rgba(251, 193, 87, 0.2);
+    background: rgba(10, 18, 35, 0.7);
+    color: #fbc157;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 80px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fbc157' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.input-with-select select:focus {
+    border-color: rgba(251, 193, 87, 0.6);
+    box-shadow: 0 0 0 3px rgba(251, 193, 87, 0.1);
+}
+
+.input-with-select input {
+    flex: 1;
+    padding: 14px 16px;
+    border-radius: 14px;
+    outline: none;
+    border: 1px solid rgba(251, 193, 87, 0.15);
+    background: rgba(10, 18, 35, 0.6);
+    color: #ffffff;
+    font-size: 16px;
+    transition: 0.3s ease;
+    min-width: 120px;
+}
+
+.input-with-select input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.input-with-select input:focus {
+    border-color: rgba(251, 193, 87, 0.6);
+    box-shadow: 0 0 0 3px rgba(251, 193, 87, 0.1);
+    background: rgba(10, 18, 35, 0.8);
+}
+
+.btn-gold-small {
+    background: linear-gradient(135deg, #fbc157, #d4a03a);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f1f3d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 0 15px rgba(251, 193, 87, 0.15);
+}
+
+.btn-gold-small:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(251, 193, 87, 0.3);
+}
+
+.btn-gold-small:active {
+    transform: scale(0.95);
+}
+
+.form-group-calc .field-note {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group-calc input:not(.input-with-select input) {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    outline: none;
+    border: 1px solid rgba(251, 193, 87, 0.15);
+    background: rgba(10, 18, 35, 0.6);
+    color: #ffffff;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+.form-group-calc input:not(.input-with-select input):focus {
+    border-color: rgba(251, 193, 87, 0.6);
+    box-shadow: 0 0 0 3px rgba(251, 193, 87, 0.1);
+    background: rgba(10, 18, 35, 0.8);
+}
+
+.result-calc {
+    background: #0d162a;
+    border-radius: 20px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.result-calc::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #fbc157, #d4a03a, #fbc157, transparent);
+    border-radius: 20px 20px 0 0;
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+}
+
+.result-calc::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba(251, 193, 87, 0.08), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+.result-calc:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(251, 193, 87, 0.08);
+}
+
+.result-calc:hover::before {
+    opacity: 1;
+}
+
+.result-calc:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.2);
+}
+
+.result-calc .result-title {
+    font-size: 13px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.result-calc .result-value {
+    margin-top: 8px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fbc157;
+    text-shadow: 0 0 20px rgba(251, 193, 87, 0.1);
+    word-break: break-word;
+    line-height: 1.25;
+}
+
+.result-calc .result-sub {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.result-calc.primary {
+    grid-column: 1 / -1;
+    background: linear-gradient(145deg, rgba(15, 25, 55, 0.9), rgba(10, 18, 35, 0.9));
+}
+
+.result-calc.primary .result-value {
+    color: #fbc157;
+    font-size: 32px;
+}
+
+.section-grid-calc {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.result-box-calc {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
 
 /* ===== Executive Signature ===== */
 .executive-signature{
@@ -460,12 +655,155 @@ input:focus{
     font-size:15px;
     color:#dce5ff;
 }
-@media (max-width:768px){
-    .exec-title{font-size:17px;line-height:1.5;}
-    .exec-name{font-size:17px;}
-    .exec-role{font-size:13px;line-height:1.6;}
+
+/* ===== دکمه Print ===== */
+.btn-print {
+    background: linear-gradient(135deg, rgba(251, 193, 87, 0.2), rgba(212, 160, 58, 0.2));
+    border: 1px solid rgba(251, 193, 87, 0.3);
+    border-radius: 14px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fbc157;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
+.btn-print:hover {
+    background: rgba(251, 193, 87, 0.15);
+    transform: scale(1.02);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .section-grid-calc,
+    .result-box-calc {
+        grid-template-columns: 1fr;
+    }
+    .calculator-section {
+        padding: 16px;
+    }
+    .result-calc .result-value {
+        font-size: 22px;
+    }
+    .input-with-select {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .input-with-select select {
+        width: 100%;
+        padding: 14px;
+        background-position: right 16px center;
+    }
+    .btn-gold-small {
+        width: 100%;
+        justify-content: center;
+    }
+    .dollar-price-box .result-box .result .result-value {
+        font-size: 26px;
+    }
+    .calculator-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .btn-toggle-calc {
+        width: 100%;
+        justify-content: center;
+    }
+    .btn-print {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width:1024px){
+    .page-card{
+        grid-template-columns:1fr;
+    }
+    .side-panel{
+        position:static;
+    }
+}
+
+@media (max-width:768px){
+    body{
+        padding:16px;
+    }
+    .main-panel,
+    .side-panel{
+        padding:22px;
+        border-radius:22px;
+    }
+    .topbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    h1{
+        font-size:27px;
+    }
+    button{
+        width:100%;
+    }
+    .dollar-price-box {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        padding: 22px 18px;
+    }
+    .dollar-price-box .price {
+        font-size: 26px;
+        padding: 6px 12px;
+    }
+}
+
+.result-value{
+    direction:ltr !important;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ===== چاپ ===== */
+@media print {
+    body {
+        background: #0a1228 !important;
+        padding: 10px !important;
+    }
+    .panel {
+        backdrop-filter: none !important;
+        background: rgba(10, 18, 35, 0.95) !important;
+        border: 1px solid rgba(251, 193, 87, 0.2) !important;
+        box-shadow: none !important;
+    }
+    .btn-secondary, .btn-gold-small, .btn-toggle-calc, .btn-print, #refreshRatesBtn, .actions {
+        display: none !important;
+    }
+    .dollar-price-box {
+        border: 1px solid rgba(251, 193, 87, 0.3) !important;
+        box-shadow: none !important;
+    }
+    .subtitle::after {
+        display: none !important;
+    }
+    .calculator-section {
+        border: 1px solid rgba(251, 193, 87, 0.2) !important;
+        box-shadow: none !important;
+    }
+    .executive-signature {
+        border: 1px solid rgba(251, 193, 87, 0.2) !important;
+        box-shadow: none !important;
+    }
+    .form-group-calc, .result-calc {
+        border: 1px solid rgba(251, 193, 87, 0.15) !important;
+        box-shadow: none !important;
+    }
+    .form-group-calc::before, .result-calc::before {
+        display: none !important;
+    }
+}
 </style>
 </head>
 
@@ -479,172 +817,256 @@ input:focus{
             <div class="topbar">
                 <div class="heading-wrap">
                     <div class="eyebrow">Sales Calculator</div>
-                    <h1>Galvanized Coil Calculator</h1>
+                    <h1>Exchange Rate Dashboard &amp; Coil Pricing Tool</h1>
                     <div class="subtitle">
-                        Enter the daily USD rate, transfer fee, galvanized coil price, and sold tonnage
-                        to calculate gross USD, exchange fee, and final net USD after transfer costs.
+                        Live USD, EUR, and CNY exchange rates from official sources, plus a galvanized coil calculator to estimate gross and net USD after transfer fees.
                     </div>
                 </div>
 
                 <div class="actions">
+                    <button class="btn-print" type="button" onclick="window.print()">
+                        🖨️ Print / Save as PDF
+                    </button>
                     <button class="btn-secondary" type="button" onclick="clearAllFields()">
                         Clear All
                     </button>
                 </div>
             </div>
 
-            <div class="section-grid">
-                <div class="form-group">
-                    <label for="usdRate">USD Rate (Toman)</label>
-                    <input
-                        type="text"
-                        id="usdRate"
-                        placeholder="85,000"
-                        inputmode="numeric"
-                        oninput="formatNumber(this)">
-                    <div class="field-note">
-                        Daily market USD rate in Toman.
+            <!-- ===== Live Exchange Rates ===== -->
+            <div class="dollar-price-box">
+                <div style="width:100%">
+                    <div style="font-size:18px;font-weight:600;margin-bottom:18px;color:#fbc157;text-shadow:0 0 20px rgba(251,193,87,0.15);">
+                        💵 Live Exchange Rates
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;flex-wrap:wrap;">
+                        
+                        <div id="ratesLastUpdate"
+                             style="
+                                font-size:16px;
+                                font-weight:600;
+                                color:#dbe7ff;
+                                padding:10px 14px;
+                                background:rgba(255,255,255,.05);
+                                border-radius:12px;
+                                line-height:1.8;
+                                display:inline-block;
+                                backdrop-filter:blur(10px);
+                                border:1px solid rgba(251,193,87,0.1);
+                             ">
+                            <div id="sourceTime">Source Update: --</div>
+                            <div id="checkedTime">Current System Time: --</div>
+                        </div>
+
+                        <button id="refreshRatesBtn"
+                            style="padding:8px 14px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#fbc157,#d4a03a);color:#0f1f3d;font-weight:600;">
+                            🔄 Refresh Rates
+                        </button>
+                    </div>
+
+                    <div class="result-box" style="margin-top:0;">
+                        <div class="result">
+                            <div class="result-title">US Dollar</div>
+                            <div class="result-value" id="cardUsd">Loading...</div>
+                        </div>
+
+                        <div class="result">
+                            <div class="result-title">USD Wire Transfer</div>
+                            <div class="result-value" id="cardUsdShakhs">Loading...</div>
+                        </div>
+
+                        <div class="result">
+                            <div class="result-title">Euro</div>
+                            <div class="result-value" id="cardEur">Loading...</div>
+                        </div>
+
+                        <div class="result">
+                            <div class="result-title">Chinese Yuan</div>
+                            <div class="result-value" id="cardCny">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div id="navasan_table_container" style="display:none"></div>
+                </div>
+            </div>
+
+            <!-- ===== Galvanized Coil Calculator ===== -->
+            <div class="calculator-section">
+                <div class="calculator-header">
+                    <div class="section-title-coil">⚙️ Galvanized Coil Calculator</div>
+                    <button class="btn-toggle-calc" type="button" id="toggleCalcBtn">
+                        👁️ Hide Calculator
+                    </button>
+                </div>
+
+                <div class="calc-content visible" id="calcContent">
+
+                    <div class="section-grid-calc">
+                        <div class="form-group-calc">
+                            <label for="usdRate">Exchange Rate (Toman)</label>
+                            <div class="input-with-select">
+                                <select id="currencySelector">
+                                    <option value="usd">USD</option>
+                                    <option value="eur">EUR</option>
+                                    <option value="cny">CNY</option>
+                                </select>
+                                <input
+                                    type="text"
+                                    id="usdRate"
+                                    placeholder="85,000"
+                                    inputmode="numeric"
+                                    oninput="formatNumber(this)">
+                                <button class="btn-gold-small" type="button" onclick="fillRateFromLive()">
+                                    ⚡ Get from Live
+                                </button>
+                            </div>
+                            <div class="field-note">
+                                Select currency and click "⚡ Get from Live" to fetch the latest rate from the table above.
+                            </div>
+                        </div>
+
+                        <div class="form-group-calc">
+                            <label for="exchangeFee">Exchange Fee (%)</label>
+                            <input
+                                type="text"
+                                id="exchangeFee"
+                                placeholder="2.5"
+                                inputmode="decimal"
+                                oninput="formatDecimal(this)">
+                            <div class="field-note">
+                                Percentage charged by exchange office to transfer the money outside Iran.
+                            </div>
+                        </div>
+
+                        <div class="form-group-calc">
+                            <label for="coilPrice">Galvanized Coil Price (Toman / Kg)</label>
+                            <input
+                                type="text"
+                                id="coilPrice"
+                                placeholder="1,600,000"
+                                inputmode="numeric"
+                                oninput="formatNumber(this)">
+                            <div class="field-note">
+                                Daily selling price per kilogram.
+                            </div>
+                        </div>
+
+                        <div class="form-group-calc">
+                            <label for="tonnage">Tonnage Sold (Ton)</label>
+                            <input
+                                type="text"
+                                id="tonnage"
+                                placeholder="100"
+                                inputmode="numeric"
+                                oninput="formatNumber(this)">
+                            <div class="field-note">
+                                Total sold weight in tons.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-box-calc">
+
+                        <div class="result-calc primary">
+                            <div class="result-title">Net Value (USD After Fee)</div>
+                            <div class="result-value" id="usdResult">0 USD</div>
+                            <div class="result-sub">
+                                Final transferable dollar amount after deducting the exchange office fee.
+                            </div>
+                        </div>
+
+                        <div class="result-calc">
+                            <div class="result-title">Gross Value (USD Before Fee)</div>
+                            <div class="result-value" id="grossUsdResult">0 USD</div>
+                        </div>
+
+                        <div class="result-calc">
+                            <div class="result-title">Exchange Fee (USD)</div>
+                            <div class="result-value" id="feeUsdResult">0 USD</div>
+                        </div>
+
+                        <div class="result-calc">
+                            <div class="result-title">Total Value (Toman)</div>
+                            <div class="result-value" id="tomanResult">0 Toman</div>
+                        </div>
+
+                        <div class="result-calc">
+                            <div class="result-title">Total Value (Rial)</div>
+                            <div class="result-value" id="rialResult">0 Rial</div>
+                        </div>
+
+                        <div class="result-calc">
+                            <div class="result-title">Net Price per Ton (USD/Ton)</div>
+                            <div class="result-value" id="usdTonResult">0 USD/Ton</div>
+                        </div>
+
+                        <div class="result-calc">
+                            <div class="result-title">Gross Price per Ton (USD/Ton)</div>
+                            <div class="result-value" id="grossUsdTonResult">0 USD/Ton</div>
+                        </div>
+
+                    </div>
+
+                    <div class="footer" style="margin-top:16px;color:rgba(255,255,255,0.4);">
+                        Exchange rates are taken from official Iranian websites
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="exchangeFee">Exchange Fee (%)</label>
-                    <input
-                        type="text"
-                        id="exchangeFee"
-                        placeholder="2.5"
-                        inputmode="decimal"
-                        oninput="formatDecimal(this)">
-                    <div class="field-note">
-                        Percentage charged by exchange office to transfer the money outside Iran.
+        </main>
+
+        <aside class="panel side-panel">
+            <h2 class="side-title">How to Use</h2>
+            <div class="side-copy">
+                This calculator helps you estimate the real USD amount received from galvanized coil sales
+                after deducting the exchange transfer fee.
+            </div>
+
+            <ul class="help-list">
+                <li>
+                    <div class="help-step">1</div>
+                    <div class="help-text">
+                        Select currency and click <strong>"⚡ Get from Live"</strong> to fetch the latest rate.
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="coilPrice">Galvanized Coil Price (Toman / Kg)</label>
-                    <input
-                        type="text"
-                        id="coilPrice"
-                        placeholder="1,600,000"
-                        inputmode="numeric"
-                        oninput="formatNumber(this)">
-                    <div class="field-note">
-                        Daily selling price per kilogram.
+                </li>
+                <li>
+                    <div class="help-step">2</div>
+                    <div class="help-text">
+                        Enter the <strong>Exchange Fee</strong> as a percentage, such as 2.5 or 3.75.
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="tonnage">Tonnage Sold (Ton)</label>
-                    <input
-                        type="text"
-                        id="tonnage"
-                        placeholder="100"
-                        inputmode="numeric"
-                        oninput="formatNumber(this)">
-                    <div class="field-note">
-                        Total sold weight in tons.
+                </li>
+                <li>
+                    <div class="help-step">3</div>
+                    <div class="help-text">
+                        Enter the daily <strong>Galvanized Coil Price</strong> per kilogram in Toman.
                     </div>
-                </div>
-            </div>
-
-            <div class="result-box">
-
-                <div class="result primary">
-                    <div class="result-title">Net Value (USD After Fee)</div>
-                    <div class="result-value" id="usdResult">0 USD</div>
-                    <div class="result-sub">
-                        Final transferable dollar amount after deducting the exchange office fee.
+                </li>
+                <li>
+                    <div class="help-step">4</div>
+                    <div class="help-text">
+                        Enter the sold <strong>Tonnage</strong> in tons. The calculator updates automatically.
                     </div>
+                </li>
+            </ul>
+
+            <!-- ===== Executive Signature ===== -->
+            <div class="executive-signature">
+                <div class="exec-title">
+                    🏆 Executive for AKA Project
                 </div>
 
-                <div class="result">
-                    <div class="result-title">Gross Value (USD Before Fee)</div>
-                    <div class="result-value" id="grossUsdResult">0 USD</div>
+                <div class="exec-name">
+                    Developed by Engineer Hamid Reza Fardar
                 </div>
 
-                <div class="result">
-                    <div class="result-title">Exchange Fee (USD)</div>
-                    <div class="result-value" id="feeUsdResult">0 USD</div>
+                <div class="exec-role">
+                    Digital Transformation &amp; Business Strategy Consultant
                 </div>
-
-                <div class="result">
-                    <div class="result-title">Total Value (Toman)</div>
-                    <div class="result-value" id="tomanResult">0 Toman</div>
-                </div>
-
-                <div class="result">
-                    <div class="result-title">Total Value (Rial)</div>
-                    <div class="result-value" id="rialResult">0 Rial</div>
-                </div>
-
-                <div class="result">
-                    <div class="result-title">Net Price per Ton (USD/Ton)</div>
-                    <div class="result-value" id="usdTonResult">0 USD/Ton</div>
-                </div>
-
-                <div class="result">
-                    <div class="result-title">Gross Price per Ton (USD/Ton)</div>
-                    <div class="result-value" id="grossUsdTonResult">0 USD/Ton</div>
-                </div>
-
             </div>
 
-            
-<!-- ===== Live Exchange Rates ===== -->
-<div class="dollar-price-box">
-    <div style="width:100%">
-        <div style="font-size:18px;font-weight:600;margin-bottom:18px;color:#f0f6ff;">
-            💵 Live Exchange Rates
-        </div>
+        </aside>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;flex-wrap:wrap;">
-            
-<div id="ratesLastUpdate"
-     style="
-        font-size:16px;
-        font-weight:600;
-        color:#dbe7ff;
-        padding:10px 14px;
-        background:rgba(255,255,255,.08);
-        border-radius:12px;
-        line-height:1.8;
-        display:inline-block;
-        backdrop-filter:blur(10px);
-     ">
-    <div id="sourceTime">Source Update: --</div>
-    <div id="checkedTime">Current System Time: --</div>
-</div>
-
-
-            <button id="refreshRatesBtn"
-                style="padding:8px 14px;border:none;border-radius:10px;cursor:pointer;background:#6c7ae0;color:#fff;">
-                🔄 Refresh Rates
-            </button>
-        </div>
-
-        <div class="result-box" style="margin-top:0;">
-            <div class="result">
-                <div class="result-title">US Dollar</div>
-                <div class="result-value" id="cardUsd">Loading...</div>
-            </div>
-
-            <div class="result">
-                <div class="result-title">USD Wire Transfer</div>
-                <div class="result-value" id="cardUsdShakhs">Loading...</div>
-            </div>
-
-            <div class="result">
-                <div class="result-title">Euro</div>
-                <div class="result-value" id="cardEur">Loading...</div>
-            </div>
-
-            <div class="result">
-                <div class="result-title">Chinese Yuan</div>
-                <div class="result-value" id="cardCny">Loading...</div>
-            </div>
-        </div>
-
-        <div id="navasan_table_container" style="display:none"></div>
     </div>
 </div>
 
@@ -669,17 +1091,15 @@ function navasanret(data){
         JSON.parse(data);
 
     setTimeout(() => {
-        document.getElementById('cardUsd').textContent =
-            getRate('usd') + ' Toman';
+        const usdVal = getRate('usd');
+        const usdShakhsVal = getRate('usd_shakhs');
+        const eurVal = getRate('eur');
+        const cnyVal = getRate('cny');
 
-        document.getElementById('cardUsdShakhs').textContent =
-            getRate('usd_shakhs') + ' Toman';
-
-        document.getElementById('cardEur').textContent =
-            getRate('eur') + ' Toman';
-
-        document.getElementById('cardCny').textContent =
-            getRate('cny') + ' Toman';
+        document.getElementById('cardUsd').textContent = usdVal + ' Toman';
+        document.getElementById('cardUsdShakhs').textContent = usdShakhsVal + ' Toman';
+        document.getElementById('cardEur').textContent = eurVal + ' Toman';
+        document.getElementById('cardCny').textContent = cnyVal + ' Toman';
 
         const usdRow = document.getElementById('usd');
         if (usdRow) {
@@ -694,54 +1114,9 @@ function navasanret(data){
 
 <script id="navasanScript" src="https://www.navasan.tech/wp-navasan.php?usd&usd_shakhs&eur&cny"></script>
 
-<div class="footer">
-<div class="footer">
-                Exchange rates are taken from official Iranian websites 
-            </div>
-
-        </main>
-
-        <aside class="panel side-panel">
-            <h2 class="side-title">How to Use</h2>
-            <div class="side-copy">
-                This calculator helps you estimate the real USD amount received from galvanized coil sales
-                after deducting the exchange transfer fee.
-            </div>
-
-            <ul class="help-list">
-                <li>
-                    <div class="help-step">1</div>
-                    <div class="help-text">
-                        Enter the current <strong>USD Rate</strong> in Toman.
-                    </div>
-                </li>
-                <li>
-                    <div class="help-step">2</div>
-                    <div class="help-text">
-                        Enter the <strong>Exchange Fee</strong> as a percentage, such as 2.5 or 3.75.
-                    </div>
-                </li>
-                <li>
-                    <div class="help-step">3</div>
-                    <div class="help-text">
-                        Enter the daily <strong>Galvanized Coil Price</strong> per kilogram in Toman.
-                    </div>
-                </li>
-                <li>
-                    <div class="help-step">4</div>
-                    <div class="help-text">
-                        Enter the sold <strong>Tonnage</strong> in tons. The calculator updates automatically.
-                    </div>
-                </li>
-            </ul>
-
-            
-
-            
-
 <script>
 // ============================================================
-//  توابع کمکی با محافظت در برابر null
+//  توابع کمکی
 // ============================================================
 function safeGetElement(id) {
     const el = document.getElementById(id);
@@ -774,7 +1149,7 @@ function formatDecimal(input) {
 }
 
 // ============================================================
-//  تابع محاسبه اصلی (ضد خطا)
+//  تابع محاسبه اصلی
 // ============================================================
 function calculate() {
     try {
@@ -820,12 +1195,63 @@ function clearAllFields() {
 }
 
 // ============================================================
+//  تابع پر کردن نرخ از بخش Live (با انتخاب ارز)
+// ============================================================
+function fillRateFromLive() {
+    const selector = document.getElementById('currencySelector');
+    const selected = selector ? selector.value : 'usd';
 
+    let cardId = 'cardUsd';
+    if (selected === 'eur') cardId = 'cardEur';
+    else if (selected === 'cny') cardId = 'cardCny';
+
+    const card = document.getElementById(cardId);
+    if (!card) {
+        alert('⚠️ نرخ ' + selected.toUpperCase() + ' هنوز بارگذاری نشده است. لطفاً صبر کنید یا دکمه Refresh Rates را بزنید.');
+        return;
+    }
+
+    let rawText = card.textContent.trim();
+    let cleanNumber = rawText.replace(/[^\d,]/g, '').replace(/,/g, '');
+
+    if (!cleanNumber || cleanNumber === '') {
+        alert('⚠️ نرخ ' + selected.toUpperCase() + ' موجود نیست. لطفاً صبر کنید تا بارگذاری شود.');
+        return;
+    }
+
+    const usdInput = document.getElementById('usdRate');
+    if (usdInput) {
+        const num = Number(cleanNumber);
+        if (!isNaN(num) && num > 0) {
+            usdInput.value = num.toLocaleString('en-US');
+            calculate();
+        } else {
+            alert('⚠️ نرخ دریافت شده معتبر نیست.');
+        }
+    }
+}
 
 // ============================================================
-//  اجرای اولیه با تاخیر
+//  دکمه مخفی/نمایش بخش محاسبات
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggleCalcBtn');
+    const calcContent = document.getElementById('calcContent');
+
+    if (toggleBtn && calcContent) {
+        toggleBtn.addEventListener('click', function() {
+            if (calcContent.classList.contains('visible')) {
+                calcContent.classList.remove('visible');
+                calcContent.classList.add('hidden');
+                toggleBtn.innerHTML = '👁️ Show Calculator';
+            } else {
+                calcContent.classList.remove('hidden');
+                calcContent.classList.add('visible');
+                toggleBtn.innerHTML = '👁️ Hide Calculator';
+            }
+        });
+    }
+
     setTimeout(() => {
         calculate();
     }, 200);
@@ -841,8 +1267,6 @@ window.onerror = function(msg, url, line, col, error) {
     return true;
 };
 </script>
-
-
 
 <script>
 function loadRates(){
@@ -876,14 +1300,11 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
-
-
 <script>
 function toEnglishDigits(str){
   const fa='۰۱۲۳۴۵۶۷۸۹';
   return String(str).replace(/[۰-۹]/g,d=>fa.indexOf(d));
 }
-
 
 function updateRateTimestamp(sourceTime){
     const now = new Date();
@@ -913,24 +1334,7 @@ function updateRateTimestamp(sourceTime){
             `Current System Time: ${currentDate} | ${currentTime}`;
     }
 }
-
-
 </script>
-
-
-<div class="executive-signature">
-    <div class="exec-title">
-        🏆 Executive for AKA Project
-    </div>
-
-    <div class="exec-name">
-        Developed by Engineer Hamid Reza Fardar
-    </div>
-
-    <div class="exec-role">
-        Digital Transformation & Business Strategy Consultant
-    </div>
-</div>
 
 </body>
 </html>
